@@ -95,6 +95,22 @@ echo 3 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_nr_run
 echo 3 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_nr_run
 echo 3 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_nr_run
 
+#Enable hotplug / Core control
+echo 1 > /sys/module/msm_thermal/core_control/enabled
+mkdir -p /sys/devices/system/cpu/cpu4/core_ctl/
+mkdir -p /sys/devices/system/cpu/cpu0/core_ctl/
+
+echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
+echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+
+echo 1 > /sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster
+echo 4 > /sys/devices/system/cpu/cpu4/core_ctl/task_thres
+echo 4 >  /sys/devices/system/cpu/cpu4/core_ctl/max_cpus
+echo 0 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
+echo 90 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
+echo 30 > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
+echo 100 > /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms
+
 for devfreq_gov in /sys/class/devfreq/*qcom,mincpubw*/governor
 do
     echo "cpufreq" > $devfreq_gov
@@ -134,18 +150,7 @@ echo 80000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
 
 # Enable governor for perf cluster
 echo 1 > /sys/devices/system/cpu/cpu4/online
-echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
-echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
-echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
-echo 400000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-echo 60000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
-echo 1382400 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
-echo 80000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_slack
-echo "19000 1382400:39000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
-echo "85 1382400:90 1747200:80" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+echo "ondemand" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
 
 # HMP Task packing settings for 8976
 echo 30 > /proc/sys/kernel/sched_small_task
@@ -182,9 +187,7 @@ echo N > /sys/module/lpm_levels/system/a72/a72-l2-gdhs/idle_enabled
 
 # Enable sched guided freq control
 echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
-echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_migration_notif
-echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_sched_load
-echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_migration_notif
+echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_migration_notify
 echo 50000 > /proc/sys/kernel/sched_freq_inc_notify
 echo 50000 > /proc/sys/kernel/sched_freq_dec_notify
 
